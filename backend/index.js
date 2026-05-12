@@ -12,6 +12,7 @@ const io = new Server(server, {
 
 app.use(cors());
 app.use(express.json());
+app.get('/health', (req, res) => res.status(200).json({ status: 'ok' }));
 
 // Routes
 app.use('/api/menu', require('./routes/menu'));
