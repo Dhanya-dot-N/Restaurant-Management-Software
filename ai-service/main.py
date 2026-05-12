@@ -1,13 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-import google.generativeai as genai
+from google import genai
 import os
 import json
 
 load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-1.5-flash")
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 app = FastAPI()
 
@@ -23,7 +22,7 @@ def get_insights(data: dict):
     prompt = f"""You are a restaurant analytics assistant. Given this sales data: {json.dumps(sales)}
     Give 2-3 short, actionable insights for the restaurant owner. Be concise, friendly, specific.
     Format as plain sentences, no bullet points."""
-    response = model.generate_content(prompt)
+    response = client.models.generate_content(model="gemini-1.5-flash", contents=prompt)
     return {"insight": response.text}
 
 @app.post("/forecast")
@@ -33,8 +32,8 @@ def forecast(data: dict):
     Predict tomorrow's expected orders. Reply with just a JSON object like:
     {{"predicted": 85, "confidence": "medium", "tip": "one short prep tip"}}
     No other text."""
-    response = model.generate_content(prompt)
+    response = client.models.generate_content(model="gemini-1.5-flash", contents=prompt)
     try:
         return json.loads(response.text.strip().replace("```json","").replace("```",""))
     except:
-        return {{"predicted": "N/A", "confidence": "low", "tip": "Not enough data yet"}}
+        return {"predicted": "N/A", "confidence": "low", "tip": "Not enough data yet"}
