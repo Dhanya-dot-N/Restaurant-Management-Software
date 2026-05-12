@@ -1,4 +1,5 @@
-const BASE = 'http://localhost:5000/api';
+const BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+const AI = import.meta.env.VITE_AI_URL || 'http://localhost:8000'
 
 export const getMenu = () =>
   fetch(`${BASE}/menu`).then(r => r.json());
