@@ -47,3 +47,24 @@ export const updateMenuPrice = (id, price) =>
 
   export const getAnalytics = () =>
   fetch(`${BASE}/analytics/summary`).then(r => r.json())
+
+  export const getInsights = async () => {
+  return {
+    insights: [
+      "Sales increased by 15% today.",
+      "Burger is the best-selling item.",
+      "Table 5 has the highest order value.",
+      "Inventory for Coke is running low."
+    ]
+  };
+};
+
+export const getForecast = async () => {
+  return {
+    forecast: {
+      expectedOrders: 42,
+      expectedRevenue: 18500,
+      busyHours: ["12:00 PM", "1:00 PM", "7:00 PM", "8:00 PM"]
+    }
+  };
+};
