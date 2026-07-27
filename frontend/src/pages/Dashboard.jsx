@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react'
+import { getInsights, getForecast } from '../api'
 export default function Dashboard() {
   const hours = ['10','11','12','1','2','3','4','5','6','7','8','9']
   const vals = [420,890,1840,2100,1650,980,1200,2800,3400,2900,1800,980]
@@ -10,7 +12,13 @@ export default function Dashboard() {
     {n:'Garlic Naan',cnt:48,color:'#a78bfa'},
     {n:'Mango Lassi',cnt:19,color:'#5eead4'},
   ]
+  
   const maxD = Math.max(...dishes.map(d=>d.cnt))
+  const [analytics, setAnalytics] = useState({ revenue: 0, orders: 0, topDishes: [] })
+
+useEffect(() => {
+  getAnalytics().then(data => setAnalytics(data))
+}, [])
 
   return (
     <div className="page">
@@ -26,6 +34,7 @@ export default function Dashboard() {
           {label:'Orders Today',val:'84',sub:'↑ 7 from yesterday',color:'var(--amber)'},
           {label:'Avg. Ticket Time',val:'14m',sub:'Target: 12m',color:'var(--coral)'},
           {label:'Tables Active',val:'6/12',sub:'50% occupancy',color:'var(--purple)'},
+          {label:'Orders Today', val:`${analytics.orders}`, sub:'Live from database', color:'var(--amber)'},
         ].map(card => (
           <div key={card.label} style={{background:'var(--surface)',borderRadius:'12px',padding:'16px',border:'1px solid var(--border)',borderTop:`3px solid ${card.color}`}}>
             <div style={{fontFamily:'var(--font-head)',fontSize:'10px',fontWeight:'700',letterSpacing:'1.5px',color:'var(--muted)',textTransform:'uppercase',marginBottom:'6px'}}>{card.label}</div>

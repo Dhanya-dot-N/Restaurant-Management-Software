@@ -37,4 +37,24 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 5000;
+app.get('/api/analytics/summary', async (req, res) => {
+  try {
+    const revenue = await pool.query(
+      `SELECT COALESCE(SUM(item_price * quantity), 0) as revenue FROM order_items`
+    );
+    const orders = await pool.query(
+      `SELECT COUNT(*) as orders FROM orders`
+    );
+    const topDishes = await pool.query(
+      `SELECT item_name, SUM(quantity) as total FROM order_items GROUP BY item_name ORDER BY total DESC LIMIT 5`
+    );
+    res.json({
+      revenue: parseInt(revenue.rows[0].revenue),
+      orders: parseInt(orders.rows[0].orders),
+      topDishes: topDishes.rows
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 server.listen(PORT, () => console.log(`Server running on port ${PORT} 🚀`));

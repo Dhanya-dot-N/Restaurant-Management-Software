@@ -1,5 +1,5 @@
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
-const AI = import.meta.env.VITE_AI_URL || 'http://localhost:8000'
+const BASE = import.meta.env.VITE_API_URL || 'https://restaurant-management-software-23m6.onrender.com'
+const AI = import.meta.env.VITE_AI_URL || 'https://restaurant-management-software-2.onrender.com'
 
 export const getMenu = () =>
   fetch(`${BASE}/menu`).then(r => r.json());
@@ -44,3 +44,6 @@ export const updateMenuPrice = (id, price) =>
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ price })
   }).then(r => r.json());
+
+  export const getAnalytics = () =>
+  fetch(`${BASE}/analytics/summary`).then(r => r.json())
